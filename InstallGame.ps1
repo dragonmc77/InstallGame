@@ -13,8 +13,10 @@ function global:installGame() {
     #>
     if ($null -eq $gameImagePath) {
         $response = $PlayniteApi.Dialogs.ShowMessage("The installation path is empty.`nDo you want to specify the location of the installation media?","No Installation Path",[System.Windows.MessageBoxButton]::YesNo)
-        if ($response -eq [System.Windows.MessageBoxResult]::Yes) {$gameImagePath = $PlayniteApi.Dialogs.SelectFolder()}
-        if ($null -eq $gameImagePath) {break}
+        if ($response -eq [System.Windows.MessageBoxResult]::Yes) {
+            $gameImagePath = $PlayniteApi.Dialogs.SelectFolder()
+        }
+        if ($gameImagePath -eq '') {break}
     } elseif (-not (Test-Path $gameImagePath)) {
         $PlayniteApi.Dialogs.ShowErrorMessage("The file/folder specified in the installation path does not exist.","Invalid Path")
         break
