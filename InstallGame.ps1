@@ -62,17 +62,16 @@ function global:runInstaller() {
             $PlayniteApi.Dialogs.ShowErrorMessage("Setup failed to run! Did you run Playnite as Administrator?","Setup Failed")
         }
         $installLocation = global:findGameFolder -Game $Game
-        if ($installLocation) {
-            $gameExe = $PlayniteApi.Dialogs.SelectFile("Game Executable|*.exe")
-            if ($gameExe) {
-                $action = [Playnite.SDK.Models.GameAction]::New()
-                $action.Type = [Playnite.SDK.Models.GameActionType]::File
-                $action.Path = $gameExe
-                $Game.PlayAction = $action
-                $Game.IsInstalled = $true
-                $Game.InstallDirectory = $installLocation
-                $PlayniteApi.Database.Games.Update($Game)    
-            }
+        
+        $gameExe = $PlayniteApi.Dialogs.SelectFile("Game Executable|*.exe")
+        if ($gameExe) {
+            $action = [Playnite.SDK.Models.GameAction]::New()
+            $action.Type = [Playnite.SDK.Models.GameActionType]::File
+            $action.Path = $gameExe
+            $Game.PlayAction = $action
+            $Game.IsInstalled = $true
+            $Game.InstallDirectory = Split-Path -Path $gameExe -Parent
+            $PlayniteApi.Database.Games.Update($Game)    
         }
     } else {
         $PlayniteApi.Dialogs.ShowErrorMessage("Setup.exe was not found in the installation path.","Setup Not Found")
