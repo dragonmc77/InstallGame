@@ -10,12 +10,12 @@ To use, select a game and run the appropriate command from the Extensions menu.
 
 History:
 I have my entire game library on Playnite, not just my currently installed games. Because my library consists of over 1000 games, most of the games in the library are not installed.
-Because I don't want to damage my game disks, I have converted all my games to ISO files and keep them in some location on a server. For each game, I put the path to its .ISO image in the "Image, ROM, or ISO Path" box of the Installation tab of that game in Playnite.
+Also, since I don't want to damage my game disks, I have converted all my games to ISO files and keep them in some location on a server. For each game, I put the path to its .ISO image in the "Image, ROM, or ISO Path" box of the Installation tab of that game in Playnite.
 Traditionally when I wanted to install a game, I would go into the game details, copy the path to the .ISO, mount it as a drive letter in Windows, then run the setup executable to install the game. I would then edit the game details with the appropriate paths for the Play Action and other relevant data.
 Because I found this cumbersome, I wrote this extension, which does all of the above automatically. 
 
 NOTES:
-Select a game, then click install from the Extensions menu. The extension will then mount the .ISO specified in the ISO Path and run the setup executable automatically. After the game is installed, it will prompt for the location of the game executable. Once specified, it will add the Play Action for that game, update the Installation Directory path, and mark it as installed.
+Select a game, then click Install from the Extensions menu. The extension will then mount the .ISO specified in the ISO Path and run the setup executable automatically. After the game is installed, it will prompt for the location of the game executable. Once specified, it will add the Play Action for that game, update the Installation Directory path, and mark it as installed.
 
 REQUIREMENTS:
 Because the extension calls an executable file, Playnite must be run with elevated privileges (Run as Administrator).
