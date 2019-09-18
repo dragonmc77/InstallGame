@@ -1,0 +1,8 @@
+Name: Install Game
+Author: dragonmc
+Version: 1.0
+Module: InstallGame.ps1
+Type: Script
+Functions: 
+    - Description: Install
+      FunctionName: installGame
