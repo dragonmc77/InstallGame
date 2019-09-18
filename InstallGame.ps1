@@ -56,6 +56,7 @@ function global:runInstaller() {
 
     if ($setupFile) {
         try {
+            Set-Location $Path
             & $setupFile.FullName | Out-Null
         } catch {
             $PlayniteApi.Dialogs.ShowErrorMessage("Setup failed to run! Did you run Playnite as Administrator?","Setup Failed")
