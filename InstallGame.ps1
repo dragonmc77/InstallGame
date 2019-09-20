@@ -11,12 +11,14 @@ function global:installGame() {
         location of the installation media to install the game. 
         Also check if the existing ISO Path for the game is actually valid.    
     #>
-    if ($null -eq $gameImagePath) {
+    if (-not $gameImagePath) {
         $response = $PlayniteApi.Dialogs.ShowMessage("The installation path is empty.`nDo you want to specify the location of the installation media?","No Installation Path",[System.Windows.MessageBoxButton]::YesNo)
         if ($response -eq [System.Windows.MessageBoxResult]::Yes) {
             $gameImagePath = $PlayniteApi.Dialogs.SelectFolder()
+        } else {
+            break
         }
-        if ($gameImagePath -eq '') {break}
+        if (-not $gameImagePath) {break}
     } elseif (-not (Test-Path $gameImagePath)) {
         $PlayniteApi.Dialogs.ShowErrorMessage("The file/folder specified in the installation path does not exist.","Invalid Path")
         break
@@ -55,11 +57,13 @@ function global:runInstaller() {
     }
 
     if ($setupFile) {
+        Set-Location $Path
         try {
-            Set-Location $Path
             & $setupFile.FullName | Out-Null
-        } catch {
+        } 
+        catch {
             $PlayniteApi.Dialogs.ShowErrorMessage("Setup failed to run! Did you run Playnite as Administrator?","Setup Failed")
+            return
         }
         $installLocation = global:findGameFolder -Game $Game
         
