@@ -7,6 +7,7 @@ function global:installGame() {
     }
     $selectedGame = $selection[0]
     $gameImagePath = $selectedGame.GameImagePath
+	
     <#  check if the ISO Path box is empty. if it is, provide the user with the opportunity to enter the
         location of the installation media to install the game. 
         Also check if the existing ISO Path for the game is actually valid.    
@@ -19,14 +20,14 @@ function global:installGame() {
             break
         }
         if (-not $gameImagePath) {break}
-    } elseif (-not (Test-Path $gameImagePath)) {
+    } elseif (-not (Test-Path -LiteralPath $gameImagePath)) {
         $PlayniteApi.Dialogs.ShowErrorMessage("The file/folder specified in the installation path does not exist.","Invalid Path")
         break
     } 
     <#  check if the ISO Path is a disk image file (.iso). if so, mount the .iso to a drive letter 
         and run the installer (setup.exe) located there. then dismount the image
     #>
-    if (Test-Path -Path $gameImagePath -PathType Leaf -Include "*.iso") {
+    if (Test-Path -LiteralPath $gameImagePath -PathType Leaf -Include "*.iso") {
         $mountedDisk = Mount-DiskImage -ImagePath $gameImagePath
         $driveLetter = ($mountedDisk | Get-Volume).DriveLetter
         $installSource = "$($driveLetter):\"
@@ -35,11 +36,11 @@ function global:installGame() {
         Dismount-DiskImage -ImagePath $mountedDisk.ImagePath
     }
     <#  check if the ISO Path is an executable file (.exe). if so, run the executable to install the game #>
-    elseif (Test-Path -Path $gameImagePath -PathType Leaf -Include "*.exe") {
+    elseif (Test-Path -LiteralPath $gameImagePath -PathType Leaf -Include "*.exe") {
         global:runInstaller -Game $selectedGame -Path $gameImagePath
     }
     <#  check if the ISO Path is a folder location. if so, run the installer (setup.exe) located there #>
-    elseif (Test-Path -Path $gameImagePath -PathType Container) {
+    elseif (Test-Path -LiteralPath $gameImagePath -PathType Container) {
         global:runInstaller -Game $selectedGame -Path $gameImagePath -FindSetup
     } 
     <#  if all other checks failed, display an error #>
@@ -51,13 +52,14 @@ function global:runInstaller() {
     param ([Playnite.SDK.Models.Game]$Game, [string]$Path, [switch]$FindSetup)
 
     if ($FindSetup) {
-        $setupFile = Get-ChildItem -Path $Path -Filter "setup.exe" | Select-Object -First 1
+        $setupFile = Get-ChildItem -LiteralPath $Path -Filter "setup.exe" | Select-Object -First 1
+		$PlayniteApi.Dialogs.ShowMessage($setupFile.FullName,"Test")
     } else {
-        $setupFile = Get-Item -Path $Path
+        $setupFile = Get-Item -LiteralPath $Path
     }
 
     if ($setupFile) {
-        Set-Location $Path
+        Set-Location -LiteralPath $Path
         try {
             & $setupFile.FullName | Out-Null
         } 
